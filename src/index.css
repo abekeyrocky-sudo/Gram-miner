@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body, html, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* সুন্দর ভেক্টর স্টাইল সকালের আকাশ */
+  background: linear-gradient(180deg, #6ec6ff 0%, #b3e5fc 55%, #e1f5fe 100%);
+  color: #1a202c;
+}
