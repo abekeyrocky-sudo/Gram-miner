@@ -34,29 +34,52 @@ export default function App() {
     }
   };
 
-  // Start Mining হ্যান্ডলার
-  const handleStart = () => {
-    setStatus('MINING');
-    setTimeLeft(MINING_DURATION);
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-      window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+  // Start Mining হ্যান্ডলার (Node.js API কল)
+  const handleStart = async () => {
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start' })
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setStatus('MINING');
+        setTimeLeft(MINING_DURATION);
+        triggerHaptic();
+      }
+    } catch (err) {
+      console.error('API Error:', err);
     }
   };
 
-  // Claim Rewards হ্যান্ডলার
-  const handleClaim = () => {
-    setBalance((prev) => Number((prev + REWARD_PER_CLAIM).toFixed(2)));
-    setStatus('IDLE');
-    setTimeLeft(MINING_DURATION);
+  // Claim Rewards হ্যান্ডলার (Node.js API কল)
+  const handleClaim = async () => {
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'claim' })
+      });
+      const data = await response.json();
 
-    // সেলিব্রেশন অ্যানিমেশন
-    confetti({
-      particleCount: 70,
-      spread: 60,
-      origin: { y: 0.85 },
-      colors: ['#00d2ff', '#00ffaa', '#ffffff']
-    });
-    triggerHaptic();
+      if (data.success) {
+        setBalance((prev) => Number((prev + data.reward).toFixed(2)));
+        setStatus('IDLE');
+        setTimeLeft(MINING_DURATION);
+
+        confetti({
+          particleCount: 70,
+          spread: 60,
+          origin: { y: 0.85 },
+          colors: ['#00d2ff', '#00ffaa', '#ffffff']
+        });
+        triggerHaptic();
+      }
+    } catch (err) {
+      console.error('API Error:', err);
+    }
   };
 
   // টাইমার ফরম্যাটিং (MM:SS)
