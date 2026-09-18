@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
-// হাই-কোয়ালিটি ভেক্টর পাখি
+// উড়ন্ত পাখি
 function RealisticBird({ className, scale = 1 }) {
   return (
     <g className={`realistic-bird ${className}`} transform={`scale(${scale})`}>
@@ -12,159 +12,218 @@ function RealisticBird({ className, scale = 1 }) {
   );
 }
 
-// গাছের বিভিন্ন লেভেলের ভেক্টর গ্রাফিক্স (Level 1 থেকে Level 4)
-function DynamicTree({ level, isGrowing }) {
+// প্রফেশনাল ভেক্টর আপেল
+function Apple({ x, y, id, harvested, onCollect }) {
+  if (harvested) return null;
+
   return (
-    <g className={`tree-graphic ${isGrowing ? 'tree-pop' : ''}`}>
-      
-      {/* ============ LEVEL 1: ছোট চারাগাছ ============ */}
-      {level === 1 && (
-        <g>
-          <path d="M 0 17 Q 2 -25 0 -55" stroke="#327529" strokeWidth="3.8" fill="none" strokeLinecap="round" />
-          <path d="M 0 -15 Q -14 -25 -22 -22" stroke="#327529" strokeWidth="2.8" fill="none" />
-          <path d="M -22 -22 Q -38 -32 -25 -42 Q -12 -32 -22 -22 Z" fill="#48b73b" />
-          <path d="M 0 -28 Q 12 -38 20 -35" stroke="#327529" strokeWidth="2.8" fill="none" />
-          <path d="M 20 -35 Q 36 -45 23 -55 Q 10 -45 20 -35 Z" fill="#48b73b" />
-          <path d="M 0 -55 Q -12 -70 0 -80 Q 3 -68 0 -55 Z" fill="#58cb4a" />
-          <path d="M 0 -55 Q 12 -70 0 -80 Q -3 -68 0 -55 Z" fill="#6ee060" />
-        </g>
-      )}
+    <g 
+      transform={`translate(${x}, ${y})`} 
+      onClick={(e) => onCollect(e, id)}
+      className="clickable-apple"
+      style={{ cursor: 'pointer' }}
+    >
+      {/* ক্লিক এরিয়া বড় করার জন্য স্বচ্ছ বৃত্ত */}
+      <circle cx="0" cy="0" r="16" fill="transparent" />
 
-      {/* ============ LEVEL 2: মাঝারি চারা ============ */}
-      {level === 2 && (
-        <g>
-          {/* শক্ত গুঁড়ি */}
-          <path d="M -3 18 L -2 -30 Q 0 -60 0 -85 L 2 -30 L 3 18 Z" fill="#5c3818" />
-          {/* ডালপালা */}
-          <path d="M -1 -35 Q -25 -50 -35 -40" stroke="#5c3818" strokeWidth="4" fill="none" strokeLinecap="round" />
-          <path d="M 1 -45 Q 25 -60 38 -52" stroke="#5c3818" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-          {/* পাতার থোকা */}
-          <circle cx="-38" cy="-42" r="18" fill="#38a169" />
-          <circle cx="-25" cy="-55" r="15" fill="#48bb78" />
-          <circle cx="40" cy="-55" r="18" fill="#38a169" />
-          <circle cx="28" cy="-68" r="16" fill="#48bb78" />
-          <circle cx="0" cy="-90" r="22" fill="#48bb78" />
-          <circle cx="0" cy="-105" r="18" fill="#68d391" />
-        </g>
-      )}
+      {/* আপেলের বোঁটা ও পাতা */}
+      <path d="M 0 -8 Q 3 -15 8 -14" stroke="#4a2c11" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+      <path d="M 2 -11 Q 8 -16 12 -12 Q 10 -6 2 -11 Z" fill="#4ade80" />
 
-      {/* ============ LEVEL 3: পূর্ণাঙ্গ বড় বৃক্ষ ============ */}
-      {level === 3 && (
-        <g>
-          {/* মোটা গাছের গুঁড়ি ও শিকড় */}
-          <path d="M -6 18 Q -4 -30 -2 -80 L 2 -80 Q 4 -30 6 18 Z" fill="#4a2c11" />
-          <path d="M -6 18 Q -14 20 -20 22" stroke="#4a2c11" strokeWidth="3" fill="none" strokeLinecap="round" />
-          <path d="M 6 18 Q 14 20 20 22" stroke="#4a2c11" strokeWidth="3" fill="none" strokeLinecap="round" />
-          
-          {/* ঘন ক্যানোপি (Lush Foliage Canopy) */}
-          <ellipse cx="0" cy="-125" rx="55" ry="42" fill="#22543d" />
-          <circle cx="-35" cy="-105" r="32" fill="#276749" />
-          <circle cx="35" cy="-105" r="32" fill="#276749" />
-          <circle cx="-20" cy="-135" r="32" fill="#2f855a" />
-          <circle cx="20" cy="-135" r="32" fill="#2f855a" />
-          <circle cx="0" cy="-145" r="30" fill="#38a169" />
-          <circle cx="0" cy="-155" r="22" fill="#48bb78" />
-        </g>
-      )}
+      {/* আপেলের মূল বডি (লাল গ্রেডিয়েন্ট ও শাইন) */}
+      <path 
+        d="M 0 -7 C -6 -10 -11 -4 -11 3 C -11 10 -5 13 0 14 C 5 13 11 10 11 3 C 11 -4 6 -10 0 -7 Z" 
+        fill="url(#appleGrad)" 
+      />
 
-      {/* ============ LEVEL 4: ফলধারী রূপালী বৃক্ষ (Fruit Bearing Tree) ============ */}
-      {level === 4 && (
-        <g>
-          {/* গুঁড়ি */}
-          <path d="M -7 18 Q -5 -30 -3 -85 L 3 -85 Q 5 -30 7 18 Z" fill="#4a2c11" />
-          <path d="M -7 18 Q -16 20 -22 22" stroke="#4a2c11" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-          <path d="M 7 18 Q 16 20 22 22" stroke="#4a2c11" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-
-          {/* বড় ক্যানোপি */}
-          <ellipse cx="0" cy="-130" rx="60" ry="46" fill="#1c4532" />
-          <circle cx="-38" cy="-110" r="35" fill="#22543d" />
-          <circle cx="38" cy="-110" r="35" fill="#22543d" />
-          <circle cx="-22" cy="-142" r="34" fill="#276749" />
-          <circle cx="22" cy="-142" r="34" fill="#276749" />
-          <circle cx="0" cy="-155" r="34" fill="#2f855a" />
-          <circle cx="0" cy="-168" r="24" fill="#48bb78" />
-
-          {/* ডালে ডালে ঝুলন্ত রসালো লাল ফল (Apples / Golden Fruits) */}
-          <g className="fruits-layer">
-            {/* ফল ১ */}
-            <circle cx="-32" cy="-98" r="6" fill="#ef4444" />
-            <circle cx="-34" cy="-100" r="2" fill="#fca5a5" />
-            
-            {/* ফল ২ */}
-            <circle cx="35" cy="-95" r="6.5" fill="#ef4444" />
-            <circle cx="33" cy="-97" r="2" fill="#fca5a5" />
-
-            {/* ফল ৩ */}
-            <circle cx="-15" cy="-125" r="6.5" fill="#ef4444" />
-            <circle cx="-17" cy="-127" r="2" fill="#fca5a5" />
-
-            {/* ফল ৪ */}
-            <circle cx="20" cy="-120" r="7" fill="#ef4444" />
-            <circle cx="18" cy="-122" r="2.2" fill="#fca5a5" />
-
-            {/* ফল ৫ */}
-            <circle cx="-5" cy="-148" r="6" fill="#ef4444" />
-            <circle cx="-7" cy="-150" r="1.8" fill="#fca5a5" />
-
-            {/* ফল ৬ */}
-            <circle cx="38" cy="-135" r="5.5" fill="#ef4444" />
-            <circle cx="36" cy="-137" r="1.8" fill="#fca5a5" />
-          </g>
-        </g>
-      )}
-
+      {/* চকচকে আলোর আভা (Glossy Shine) */}
+      <ellipse cx="-4" cy="-1" rx="3" ry="5" fill="#fca5a5" opacity="0.75" transform="rotate(-20 -4 -1)" />
+      <circle cx="4" cy="5" r="1.5" fill="#ffffff" opacity="0.6" />
     </g>
   );
 }
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState('mine'); // 'mine' | 'task' | 'wallet'
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [gramBalance, setGramBalance] = useState(12.50);
+  const [tasks, setTasks] = useState([
+    { id: 1, title: 'Join Telegram Channel', reward: 50, done: false },
+    { id: 2, title: 'Follow on X (Twitter)', reward: 30, done: false },
+    { id: 3, title: 'Invite 3 Friends', reward: 100, done: false },
+  ]);
+
   const [isDay, setIsDay] = useState(true);
-  const [treeLevel, setTreeLevel] = useState(1);
-  const [isGrowing, setIsGrowing] = useState(false);
+  const [collectedApples, setCollectedApples] = useState(0);
+  const [treeShake, setTreeShake] = useState(false);
+  const [popups, setPopups] = useState([]);
+
+  // আপেলের তালিকা (স্থান ও স্ট্যাটাস)
+  const [apples, setApples] = useState([
+    { id: 1, x: -42, y: -110, harvested: false },
+    { id: 2, x: -18, y: -135, harvested: false },
+    { id: 3, x: 22, y: -140, harvested: false },
+    { id: 4, x: 45, y: -115, harvested: false },
+    { id: 5, x: -30, y: -80, harvested: false },
+    { id: 6, x: 2, y: -95, harvested: false },
+    { id: 7, x: 35, y: -85, harvested: false },
+    { id: 8, x: -3, y: -60, harvested: false },
+  ]);
 
   useEffect(() => {
     const currentHour = new Date().getHours();
     setIsDay(currentHour >= 6 && currentHour < 18);
   }, []);
 
-  // Level Up বাটন হ্যান্ডলার
-  const handleLevelUp = () => {
-    if (treeLevel >= 4) {
-      // ম্যাক্স লেভেলে ফল তোলা (Harvest)
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.7 },
-        colors: ['#ef4444', '#ffd700', '#22c55e']
-      });
-      // হার্ভেস্ট করে আবার লেভেল ১ থেকে শুরু
-      setTreeLevel(1);
-      return;
+  // আপেলে ট্যাপ করলে কালেকশন লজিক
+  const handleAppleTap = (e, id) => {
+    e.stopPropagation();
+
+    // গাছ কাঁপবে
+    setTreeShake(true);
+    setTimeout(() => setTreeShake(false), 350);
+
+    // আপেল হার্ভেস্ট মার্ক করা
+    setApples(prev => prev.map(apple => apple.id === id ? { ...apple, harvested: true } : apple));
+    setCollectedApples(prev => prev + 1);
+
+    // ফ্লোটিং টেক্সট পপআপ তৈরি
+    const rect = e.target.getBoundingClientRect();
+    const newPopup = {
+      id: Date.now(),
+      x: rect.left + rect.width / 2,
+      y: rect.top
+    };
+    setPopups(prev => [...prev, newPopup]);
+    setTimeout(() => {
+      setPopups(prev => prev.filter(p => p.id !== newPopup.id));
+    }, 800);
+
+    // টেলিগ্রাম হ্যাপটিক্স
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+      window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
     }
+  };
 
-    setIsGrowing(true);
-    setTreeLevel(prev => prev + 1);
-
-    // সেলিব্রেশন স্পার্কল
+  // সব আপেল নতুন করে ফলানো (Regrow)
+  const handleRegrow = () => {
     confetti({
-      particleCount: 50,
+      particleCount: 60,
       spread: 60,
-      origin: { y: 0.75 },
-      colors: ['#4ade80', '#22c55e', '#facc15']
+      origin: { y: 0.7 },
+      colors: ['#ef4444', '#4ade80', '#ffd700']
     });
 
-    setTimeout(() => setIsGrowing(false), 800);
+    setApples(prev => prev.map(a => ({ ...a, harvested: false })));
   };
+
+  const remainingApples = apples.filter(a => !a.harvested).length;
 
   return (
     <div className="game-screen">
-      {/* দিন/রাত সুইচ বাটন */}
-      <button 
-        className="time-toggle-btn"
-        onClick={() => setIsDay(!isDay)}
-      >
-        {isDay ? '☀️ Day Mode' : '🌙 Night Mode'}
-      </button>
+      
+      {/* ================= হুবহু রেফারেন্সের মতো ২টি গেম ব্যালেন্স কার্ড ================= */}
+      <div className="top-bar-hud">
+        {/* ডে/নাইট সুইচ */}
+        <button className="time-toggle-btn" onClick={() => setIsDay(!isDay)}>
+          {isDay ? '☀️ Day' : '🌙 Night'}
+        </button>
+
+        {/* ডান পাশের ২টি হুবহু ক্যাপসুল কার্ড */}
+        <div className="game-cards-container">
+          
+          {/* ১. ৩ডি ডায়মন্ড / GRAM ব্যালেন্স কার্ড */}
+          <div className="game-capsule-card">
+            <div className="capsule-icon-wrap">
+              {/* প্রিমিয়াম ৩ডি ভেক্টর ডায়মন্ড */}
+              <svg width="27" height="25" viewBox="0 0 38 36" style={{ overflow: 'visible' }}>
+                <defs>
+                  <linearGradient id="diaTop" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#d5f8ff" />
+                    <stop offset="100%" stopColor="#7be5ff" />
+                  </linearGradient>
+                  <linearGradient id="diaCenter" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#38c9ff" />
+                    <stop offset="100%" stopColor="#0088dd" />
+                  </linearGradient>
+                  <linearGradient id="diaLeft" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#00aaff" />
+                    <stop offset="100%" stopColor="#0066aa" />
+                  </linearGradient>
+                  <linearGradient id="diaRight" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#0077cc" />
+                    <stop offset="100%" stopColor="#004d80" />
+                  </linearGradient>
+                </defs>
+                <polygon points="19,34 6,12 19,16" fill="url(#diaCenter)" />
+                <polygon points="19,34 6,12 0,14" fill="url(#diaLeft)" />
+                <polygon points="19,34 32,12 38,14" fill="url(#diaRight)" />
+                <polygon points="19,34 19,16 32,12" fill="#0099ee" />
+                <polygon points="6,12 11,3 27,3 32,12" fill="url(#diaTop)" />
+                <polygon points="0,14 6,12 11,3" fill="#a8f2ff" />
+                <polygon points="38,14 32,12 27,3" fill="#38c9ff" />
+                <polygon points="6,12 19,16 32,12 19,8" fill="#e8fcff" opacity="0.95" />
+                <circle cx="12" cy="7" r="2" fill="#ffffff" />
+                <polygon points="12,3 13.5,7 12,11 10.5,7" fill="#ffffff" opacity="0.9" />
+                <polygon points="8,7 12,8.5 16,7 12,5.5" fill="#ffffff" opacity="0.9" />
+              </svg>
+            </div>
+            <span className="capsule-value">{gramBalance.toFixed(2)}</span>
+            <button className="capsule-plus-btn" onClick={() => setGramBalance(prev => Number((prev + 10).toFixed(2)))}>
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                <path d="M7 2V12M2 7H12" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          {/* ২. ৩ডি পাকা আম / ম্যাঙ্গো ব্যালেন্স কার্ড */}
+          <div className="game-capsule-card">
+            <div className="capsule-icon-wrap">
+              {/* প্রিমিয়াম ৩ডি ভেক্টর ম্যাঙ্গো */}
+              <svg width="25" height="27" viewBox="0 0 36 38" style={{ overflow: 'visible' }}>
+                <defs>
+                  <radialGradient id="mangoBodyGrad" cx="35%" cy="35%" r="65%">
+                    <stop offset="0%" stopColor="#fff066" />
+                    <stop offset="30%" stopColor="#ffc800" />
+                    <stop offset="70%" stopColor="#ff9900" />
+                    <stop offset="100%" stopColor="#e65c00" />
+                  </radialGradient>
+                  <linearGradient id="mangoLeafGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#86efac" />
+                    <stop offset="100%" stopColor="#15803d" />
+                  </linearGradient>
+                </defs>
+                <path d="M 17 8 Q 16 2 13 0" stroke="#5c3818" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+                <path d="M 17 7 Q 28 2 31 9 Q 26 14 17 8 Z" fill="url(#mangoLeafGrad)" stroke="#166534" strokeWidth="0.8" />
+                <path d="M 17 7 Q 24 8 30 9" stroke="#bbf7d0" strokeWidth="0.8" fill="none" />
+                <path 
+                  d="M 17 7 C 7 7 3 15 3 24 C 3 32 9 37 17 37 C 27 37 32 30 32 21 C 32 12 25 7 17 7 Z" 
+                  fill="url(#mangoBodyGrad)" 
+                  stroke="#b45309"
+                  strokeWidth="0.8"
+                />
+                <path d="M 8 16 Q 7 24 12 30" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.65" />
+                <ellipse cx="12" cy="14" rx="3.5" ry="5.5" fill="#ffffff" opacity="0.6" transform="rotate(-25 12 14)" />
+                <circle cx="25" cy="27" r="1.5" fill="#ffffff" opacity="0.5" />
+              </svg>
+            </div>
+            <span className="capsule-value">{collectedApples.toLocaleString()}</span>
+            <button className="capsule-plus-btn" onClick={() => setCollectedApples(prev => prev + 5)}>
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                <path d="M7 2V12M2 7H12" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ভাসমান স্কোর অ্যানিমেশন (+1 🍎) */}
+      {popups.map(p => (
+        <div key={p.id} className="float-score" style={{ left: p.x, top: p.y }}>
+          +1 🍎
+        </div>
+      ))}
 
       {/* ================= SVG সিনারি ================= */}
       <svg className="vector-landscape" viewBox="0 0 400 650" preserveAspectRatio="xMidYMid slice">
@@ -185,6 +244,13 @@ export default function App() {
             )}
           </linearGradient>
 
+          {/* আপেলের রিয়ালিস্টিক লাল গ্রেডিয়েন্ট */}
+          <radialGradient id="appleGrad" cx="35%" cy="30%" r="65%">
+            <stop offset="0%" stopColor="#f87171" />
+            <stop offset="50%" stopColor="#ef4444" />
+            <stop offset="100%" stopColor="#991b1b" />
+          </radialGradient>
+
           <radialGradient id="sunMoonGlow" cx="50%" cy="50%" r="50%">
             {isDay ? (
               <>
@@ -202,33 +268,14 @@ export default function App() {
           </radialGradient>
 
           <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#38bdf8" />
-                <stop offset="100%" stopColor="#0284c7" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#5bb3d6" />
-                <stop offset="100%" stopColor="#3b90b8" />
-              </>
-            )}
+            <stop offset="0%" stopColor={isDay ? "#38bdf8" : "#5bb3d6"} />
+            <stop offset="100%" stopColor={isDay ? "#0284c7" : "#3b90b8"} />
           </linearGradient>
 
           <linearGradient id="fieldGrad" x1="0" y1="0" x2="0" y2="1">
-            {isDay ? (
-              <>
-                <stop offset="0%" stopColor="#52b74b" />
-                <stop offset="50%" stopColor="#3ea138" />
-                <stop offset="100%" stopColor="#2c7e26" />
-              </>
-            ) : (
-              <>
-                <stop offset="0%" stopColor="#45a342" />
-                <stop offset="50%" stopColor="#358e33" />
-                <stop offset="100%" stopColor="#256f23" />
-              </>
-            )}
+            <stop offset="0%" stopColor={isDay ? "#52b74b" : "#45a342"} />
+            <stop offset="50%" stopColor={isDay ? "#3ea138" : "#358e33"} />
+            <stop offset="100%" stopColor={isDay ? "#2c7e26" : "#256f23"} />
           </linearGradient>
         </defs>
 
@@ -247,12 +294,10 @@ export default function App() {
             <circle cx="180" cy="210" r="1" />
             <circle cx="360" cy="160" r="1.2" />
             <circle cx="290" cy="220" r="1.5" />
-            <circle cx="25" cy="240" r="1" />
-            <circle cx="120" cy="260" r="1.2" />
           </g>
         )}
 
-        {/* ভাসমান মেঘ */}
+        {/* দিনের মেঘ */}
         {isDay && (
           <g className="floating-clouds">
             <g className="cloud cloud-1">
@@ -295,14 +340,12 @@ export default function App() {
           </g>
         )}
 
-        {/* পাহাড় */}
+        {/* পর্বতমালা */}
         <g>
           <polygon points="-20,380 40,290 130,380" fill={isDay ? "#3b5c7a" : "#182c4f"} />
           <polygon points="40,290 90,340 130,380 40,380" fill={isDay ? "#2d4760" : "#12203a"} />
-
           <polygon points="80,380 170,305 260,380" fill={isDay ? "#43688a" : "#1b3057"} />
           <polygon points="170,305 210,350 260,380 170,380" fill={isDay ? "#314f6b" : "#142442"} />
-
           <polygon points="210,380 300,325 390,380" fill={isDay ? "#4a7296" : "#1c335c"} />
           <polygon points="300,325 340,360 390,380 300,380" fill={isDay ? "#345370" : "#13233f"} />
         </g>
@@ -338,7 +381,7 @@ export default function App() {
         {/* সবুজ মাঠ */}
         <path d="M -10 420 Q 150 400 410 418 L 410 650 L -10 650 Z" fill="url(#fieldGrad)" />
 
-        {/* সোলার প্যানেলসমূহ */}
+        {/* সোলার প্যানেল */}
         <g transform="translate(300, 432)">
           <g>
             <line x1="16" y1="18" x2="16" y2="28" stroke="#cbd5e1" strokeWidth="2" />
@@ -359,52 +402,170 @@ export default function App() {
           </g>
         </g>
 
-        {/* পুকুর */}
+        {/* লেক ও ঘাস */}
         <path d="M -10 440 Q 60 445 95 470 Q 70 495 -10 485 Z" fill={isDay ? "#0284c7" : "#4aa7c7"} opacity="0.9" />
         <path d="M -10 444 Q 50 448 85 470 Q 60 490 -10 480 Z" fill={isDay ? "#38bdf8" : "#60c5e8"} />
 
-        {/* ঘাস */}
-        <g stroke={isDay ? "#1b5e20" : "#236021"} strokeWidth="2" strokeLinecap="round" fill="none">
-          <path d="M 25 530 L 22 518 M 25 530 L 29 520 M 25 530 L 17 524" />
-          <path d="M 60 520 L 58 510 M 60 520 L 64 512" />
-          <path d="M 330 540 L 327 528 M 330 540 L 335 530" />
-          <path d="M 290 620 L 287 608 M 290 620 L 295 610 M 290 620 L 282 613" />
-        </g>
-
-        {/* কেন্দ্রের গাছ ও মাটি */}
-        <g transform="translate(200, 520)">
-          <ellipse cx="0" cy="18" rx="42" ry="12" fill="none" stroke="#ffffff" strokeWidth="2.5" opacity="0.85" />
-          <ellipse cx="0" cy="18" rx="33" ry="9" fill="#c26322" />
+        {/* ================= প্রফেশনাল অর্গানিক আপেল গাছ ================= */}
+        <g transform="translate(200, 510) scale(1.38)">
+          {/* সাদা চক দাগের রিং ও মাটি */}
+          <ellipse cx="0" cy="18" rx="44" ry="13" fill="none" stroke="#ffffff" strokeWidth="2.5" opacity="0.85" />
+          <ellipse cx="0" cy="18" rx="34" ry="9" fill="#c26322" />
           <ellipse cx="0" cy="19" rx="30" ry="7" fill="#a54e14" />
-          <circle cx="-12" cy="18" r="1.5" fill="#7a3406" />
-          <circle cx="8" cy="20" r="1.2" fill="#7a3406" />
-          <circle cx="16" cy="17" r="1.4" fill="#7a3406" />
+          <circle cx="-14" cy="18" r="1.5" fill="#7a3406" />
+          <circle cx="10" cy="20" r="1.2" fill="#7a3406" />
 
-          {/* ডাইনামিক বড় হওয়া গাছ */}
-          <DynamicTree level={treeLevel} isGrowing={isGrowing} />
+          {/* পুরো গাছ (ট্যাপ করলে কাঁপবে) */}
+          <g className={`organic-tree-group ${treeShake ? 'shake-animation' : ''}`}>
+            
+            {/* ১. অর্গানিক কাঠের গুঁড়ি ও শিকড় (Natural Bark & Branches) */}
+            <path 
+              d="M -16 20 C -12 -20 -10 -60 -12 -90 C -22 -110 -35 -125 -42 -135 C -39 -137 -34 -134 -26 -126 C -18 -118 -12 -105 -8 -98 C -6 -112 -4 -128 -2 -145 C 0 -145 2 -135 2 -120 C 6 -108 14 -116 24 -130 C 30 -137 34 -138 36 -136 C 30 -126 18 -114 8 -95 C 10 -60 12 -20 16 20 Z" 
+              fill="#543310" 
+            />
+            {/* গুঁড়ির কাঠামোর ছায়া ও টেক্সচার */}
+            <path d="M -10 18 C -6 -20 -5 -60 -7 -90" stroke="#3d2107" strokeWidth="2.5" fill="none" />
+            <path d="M 4 18 C 8 -20 8 -60 5 -90" stroke="#78481a" strokeWidth="2" fill="none" />
+
+            {/* ২. ঘন বহুমাত্রিক পাতার ক্যানোপি (Layered 3D Canopy) */}
+            {/* ডার্ক ব্যাকগ্রাউন্ড শ্যাডো লিফ লেয়ার */}
+            <ellipse cx="0" cy="-115" rx="66" ry="50" fill="#1b4d2e" />
+            <circle cx="-42" cy="-95" r="38" fill="#1b4d2e" />
+            <circle cx="42" cy="-95" r="38" fill="#1b4d2e" />
+
+            {/* মিডটোন গ্রিন লেয়ার */}
+            <circle cx="-35" cy="-110" r="36" fill="#2d6a4f" />
+            <circle cx="35" cy="-110" r="36" fill="#2d6a4f" />
+            <circle cx="-20" cy="-135" r="35" fill="#40916c" />
+            <circle cx="20" cy="-135" r="35" fill="#40916c" />
+
+            {/* টপ হাইলাইট লাইট গ্রিন ক্রাউন */}
+            <circle cx="0" cy="-145" r="36" fill="#52b788" />
+            <circle cx="0" cy="-158" r="26" fill="#74c69d" />
+            <circle cx="-15" cy="-152" r="18" fill="#95d5b2" opacity="0.6" />
+
+            {/* ৩. ইন্টারঅ্যাক্টিভ ট্যাপযোগ্য আপেলসমূহ */}
+            {apples.map(apple => (
+              <Apple 
+                key={apple.id} 
+                id={apple.id} 
+                x={apple.x} 
+                y={apple.y} 
+                harvested={apple.harvested}
+                onCollect={handleAppleTap}
+              />
+            ))}
+
+          </g>
         </g>
       </svg>
 
-      {/* ================= LEVEL UP অ্যাকশন বাটন ================= */}
+      {/* ================= বটম অ্যাকশন এরিয়া ================= */}
       <div className="bottom-action-container">
-        <button 
-          className={`level-up-btn ${treeLevel === 4 ? 'harvest-btn' : ''}`}
-          onClick={handleLevelUp}
-        >
-          <div className="btn-shine"></div>
-          {treeLevel < 4 ? (
-            <>
-              <span className="btn-icon">⚡</span>
-              <span className="btn-text">লেভেল আপ (Lvl {treeLevel})</span>
-            </>
-          ) : (
-            <>
-              <span className="btn-icon">🍎</span>
-              <span className="btn-text">ফল সংগ্রহ করুন!</span>
-            </>
-          )}
-        </button>
+        {remainingApples > 0 ? (
+          <div className="tap-hint-pill">
+            <span className="pulse-dot"></span>
+            গাছের আপেলে ট্যাপ করে সংগ্রহ করুন! ({remainingApples} টি বাকি)
+          </div>
+        ) : (
+          <button className="regrow-btn" onClick={handleRegrow}>
+            <span className="btn-shine"></span>
+            🌱 নতুন করে আপেল ফলান!
+          </button>
+        )}
       </div>
+
+      {/* ================= TASK PAGE ================= */}
+      {activeTab === 'task' && (
+        <div className={`tab-page-modal ${isDay ? 'day-modal' : ''}`}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* ভেক্টর টাস্ক আইকন */}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+              <path d="m9 14 2 2 4-4" />
+            </svg>
+            <h2>Tasks & Quests</h2>
+          </div>
+          <p className="modal-sub">টাস্ক সম্পন্ন করে GRAM আর্ন করুন</p>
+          
+          <div className="tasks-list">
+            {tasks.map(t => (
+              <div key={t.id} className="task-item-card">
+                <div>
+                  <h4>{t.title}</h4>
+                  <span className="task-reward">+{t.reward} GRAM</span>
+                </div>
+                <button 
+                  className="task-btn" 
+                  disabled={t.done}
+                  onClick={() => {
+                    setTasks(tasks.map(item => item.id === t.id ? { ...item, done: true } : item));
+                    setGramBalance(prev => Number((prev + t.reward).toFixed(2)));
+                  }}
+                >
+                  {t.done ? '✓ Claimed' : 'Claim'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= ASSET / WALLET PAGE ================= */}
+      {activeTab === 'wallet' && (
+        <div className={`tab-page-modal ${isDay ? 'day-modal' : ''}`}>
+          <h2>Asset & Wallet</h2>
+          <div className="asset-card">
+            <span style={{ fontSize: '12px', opacity: 0.8 }}>Total Balance</span>
+            <h1 style={{ fontSize: '36px', margin: '8px 0' }}>{gramBalance} <span style={{ fontSize: '20px', color: '#0284c7' }}>GRAM</span></h1>
+            <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: 'bold' }}>≈ ${(gramBalance * 0.085).toFixed(2)} USD</p>
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <button 
+              className="ton-connect-btn"
+              onClick={() => setWalletConnected(!walletConnected)}
+            >
+              {walletConnected ? '🟢 EQB9...4f71 (Connected)' : '⚡ Connect TON Wallet'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ================= ৩টি প্রফেশনাল ভেক্টর আইকনযুক্ত ন্যাভ বার ================= */}
+      <nav className={`bottom-nav-bar ${isDay ? 'day-nav' : ''}`}>
+        
+        {/* ۱. Mine ভেক্টর আইকন (Pickaxe) */}
+        <button className={`nav-btn ${activeTab === 'mine' ? 'active' : ''}`} onClick={() => setActiveTab('mine')}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m14 10 7-7" />
+            <path d="M3 21l6.5-6.5" />
+            <path d="M12.5 5.5l1.5-1.5a4.24 4.24 0 0 1 6 6l-1.5 1.5" />
+            <path d="M7 13.5a4.24 4.24 0 0 1-6-6l1.5-1.5a4.24 4.24 0 0 1 6 6l-1.5 1.5" />
+          </svg>
+          <span>Mine</span>
+        </button>
+
+        {/* ২. Task ভেক্টর আইকন (Checklist) */}
+        <button className={`nav-btn ${activeTab === 'task' ? 'active' : ''}`} onClick={() => setActiveTab('task')}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+            <path d="m9 14 2 2 4-4" />
+          </svg>
+          <span>Task</span>
+        </button>
+
+        {/* ৩. Wallet ভেক্টর আইকন (Wallet) */}
+        <button className={`nav-btn ${activeTab === 'wallet' ? 'active' : ''}`} onClick={() => setActiveTab('wallet')}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
+            <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+          </svg>
+          <span>Wallet</span>
+        </button>
+      </nav>
 
     </div>
   );
